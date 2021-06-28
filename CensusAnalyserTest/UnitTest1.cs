@@ -14,14 +14,22 @@ namespace CensusAnalyserTest
         static string IndianStateCensusFilePathWithWrongDelimeter = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\DelimiterIndiaStateCensusData.csv";
         static string wrongIndianStateCensusFileType = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\IndiaStateCensusData.txt";
         static string IndianStateCensusFilePathWithWrongHeader = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\WrongIndiaStateCensusData.csv";
+        static string indianStateCodeHeaders = @"SrNo,State Name,TIN,StateCode";
+        static string indianStateCodePath = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\IndiaStateCode.csv";
+        static string WrongIndianStateCodeFilePath = @"C:\Users\Dell\DotNetProjects\Ce\WrongIndiaStateCode.csv";
+        static string WrongIndianStateCodeFileTypePath = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\IndiaStateCode.txt";
+        static string IndianStateCodeFilePathWrongDelimeter = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\DelimiterIndiaStateCode.csv";
+        static string IndianStateCodeFilePathWrongHeader = @"C:\Users\Pampapathi K\Desktop\Pampapathi\IndianStateCensusAnalyser\CensusAnalyserTest\Utility\WrongIndiaStateCode.csv";
         CensusAnalyser censusAnalyser;
         Dictionary<string, CensusDTO> totalRecord;
+        Dictionary<string, CensusDTO> stateRecords;
 
         [SetUp]
         public void Setup()
         {
             censusAnalyser = new CensusAnalyser();
             totalRecord = new Dictionary<string, CensusDTO>();
+            stateRecords = new Dictionary<string, CensusDTO>();
         }
         [Test]
         public void GivenIndianCensusDataFile_WhenReaded_ShouldReturnCensusDataCount()
@@ -53,6 +61,37 @@ namespace CensusAnalyserTest
         {
             var censusException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(IndianStateCensusFilePathWithWrongHeader, Country.INDIA, indianStateCensusHeaders));
             Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, censusException.eType);
+        }
+        [Test]
+        public void GivenIndianStateCodeFile_WhenRead_ShouldReturnCensusDataCount()
+        {
+            stateRecords = censusAnalyser.LoadCensusData(indianStateCodePath, Country.INDIA, indianStateCodeHeaders);
+            Assert.AreEqual(37, stateRecords.Count);
+        }
+        [Test]
+        public void GivenWrongStateCodeFile_WhenRead_ShouldReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(WrongIndianStateCodeFilePath, Country.INDIA, indianStateCodeHeaders));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.FILE_NOT_FOUND, stateException.eType);
+        }
+
+        [Test]
+        public void GivenWrongIndianStateCodeFileType_WhenRead_ShouldReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(WrongIndianStateCodeFileTypePath, Country.INDIA, indianStateCodeHeaders));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INVALID_FILE_TYPE, stateException.eType);
+        }
+        [Test]
+        public void GivenIndianStateCodeFile_WhenWrongDelimeter_ShouldReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(IndianStateCodeFilePathWrongDelimeter, Country.INDIA, indianStateCodeHeaders));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER, stateException.eType);
+        }
+        [Test]
+        public void GivenIndianStateCodeFile_WhenWrongHeader_ShouldReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => censusAnalyser.LoadCensusData(IndianStateCodeFilePathWrongHeader, Country.INDIA, indianStateCodeHeaders));
+            Assert.AreEqual(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, stateException.eType);
         }
     }
 }
